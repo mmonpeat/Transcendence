@@ -1,0 +1,26 @@
+- Dokerfile node
+- Dokerfile openssl i les .key
+- crear servidor amb https
+- informar-me millor sobre JWT i 2autentificacio
+- informar-me sobre firewall (afecta a tot el codi que faig?(Users, chat...)
+- Endpoints usuari
+   - crear user(Gmail i Username unics)
+   - foto perfil
+   - crear password hash - slash
+   - edit Username
+   - Edit gmail
+   - Edit foto perfil
+   - configuració ( dark o light )
+   - borrar totes les dades
+   - tornejos guanyats i tal crec que aquí no cal (més endavant)
+- chat live (els no login no poden escriure)
+   - no poden enviar arxius ni img (gestió error )
+   - el nom ha de sortir devant 
+   - es guarden els missatges en bd temporal, pel pinturillo
+- chat friends
+   - converses individuals (no grups)
+   - que surti llista de persones amb el Username i poder buscar per lletres es va modificat a la que escrius a la cerca.
+   - es guarden tots els missatges a la bbdd i amb qui parlar cada usuari
+- els que no fan login poden veure streams 
+- blockchain
+- Endpoints del game 
