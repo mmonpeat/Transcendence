@@ -1,4 +1,6 @@
 #!/bin/bash
+#genera clau privada de la CA
+#openssl genrsa -out rootCA.key 2048
 
 echo "Generating SSL certification"
 openssl req -x509 -nodes -days 365 \
