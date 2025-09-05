@@ -2,7 +2,13 @@
 //The Node.js File System module (fs), proporciona methods per treballar amb file system. 
 const fs = require('fs');
 const https = require('https');
-//const jwt = require('@fastify/jwt');
+//const { WebSocketServer } = require('wss');
+
+//const app = fastify();
+//const server = https.createServer(app);
+//const wss = new WebSocketServer({ server });
+//video ??? https://youtu.be/r6gA1NCfvYA
+//https://www.rfc-editor.org/rfc/rfc6455
 
 const options = {
   key: fs.readFileSync('/app/keys/fd_trascendence.key'),
@@ -10,8 +16,51 @@ const options = {
 };
 
 https.createServer(options, (req, res) => {
-  console.log("Request incoming:", req.method, req.url);
   res.end('hello world\n');
 }).listen(4443, () => {
   console.log("server https escolta port 4443");
 });
+
+/*
+| Tema                    | Recursos destacats                                                                   |
+| ----------------------- | ------------------------------------------------------------------------------------ |
+| WAF / ModSecurity       | Configuració de WAF; HashiCorp Vault amb autenticació via JWT / OIDC / MFA           |
+| JWT + 2FA               | JWT tokens, MFA per autenticació amb push notifications, tokens curts i rotats       | 
+| GDPR / Privacitat       | Add-ons de anonimització (Jive, Easy Project, Liferay), `gdpr-toolkit`, `gdpr_admin` |
+| Legalitat anonimització | Discussions a Reddit sobre anonimització legal i registre de sol·licituds GDPR       |
+| Validació i hashing     | Hashing amb bcrypt, validació client/servidor, protecció contra injeccions           |
+| HTTPS/WSS               | Protecció integral a nivell de canal de transport                                    |
+
+WAF / ModSecurity & Secrets Management (HashiCorp Vault)
+https://developer.hashicorp.com/vault/docs/auth/jwt?
+https://support.hashicorp.com/hc/en-us/articles/12406076771347-Vault-JWT-auth-with-static-keys?
+https://developer.hashicorp.com/vault/tutorials/auth-methods/multi-factor-authentication?
+
+Autenticació amb JWT + 2FA
+https://developer.hashicorp.com/vault/tutorials/auth-methods/multi-factor-authentication?
+https://factustorm.com/es/guides/security-guidelines/?
+https://factustorm.com/es/guides/security-guidelines/?
+
+GDPR, anonimització i privacitat
+https://docs.jivesoftware.com/legal_and_compliance/gdpr_compliance/Add-on_gdpr_UsingManualAdminAnonymize-1?
+https://help.liferay.com/hc/es/articles/360018156151-GDPR-Tools?
+https://www.easyproject.com/documentation/article/gdpr-features-0?
+https://github.com/trbocom/gdpr-toolkit?
+https://github.com/DivanteLtd/anonymizer?
+https://github.com/Colex/gdpr_admin/blob/master/README.md?
+
+reddit
+https://www.reddit.com/r/gdpr/comments/yrduuq/does_anonymization_fall_under_erasuredeletion/?
+https://www.reddit.com/r/gdpr/comments/1d1lnm9/quick_question_an_anonymous_user_uses_my_service/?
+https://www.reddit.com/r/gdpr/comments/d330pm/is_anonimisation_always_legal/?
+https://www.reddit.com/r/gdpr/comments/sca808/if_someone_submits_a_gdpr_erasure_request_am_i/?
+
+Validació, hashing i seguretat de formularis
+
+Hashing de contrasenyes: utilitza un algorisme segur com bcrypt, amb sal i complexitat adequada.
+
+Validació d’entrada: aplica validacions tant al client (formularis) com al servidor (backend), per prevenir XSS, SQLi, i d’altres vulnerabilitats comuns.
+
+Protecció contra injeccions: utilitza consultes parametritzades, escaping adequat i sanejament dels inputs.
+
+*/

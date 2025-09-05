@@ -16,6 +16,5 @@ COPY --chmod=744 ./generate-certificate.sh ./entrypoint.sh
 
 RUN ["./entrypoint.sh"]
 
-
 #CMD ["sh"]
 CMD ["npm", "start"]
