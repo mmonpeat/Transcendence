@@ -1,20 +1,28 @@
-FROM node:20
+#backend
+# Imagen base oficial de Node.js
+FROM node:20-slim
 
-WORKDIR /app
+# Instalar dependencias necesarias para better-sqlite3
+RUN apt-get update && apt-get install -y \
+    sqlite3 \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY package*.json ./
-RUN npm install
+# Crear directorio de trabajo
+WORKDIR /usr/src/app
 
-# Copia los archivos de tu proyecto en el directorio de trabajo
-# COPY ./backend .
+# Copiar backend
 COPY . .
-
-RUN apt-get update && \
-    apt-get install -y openssl
-
 COPY --chmod=744 ./generate-certificate.sh ./entrypoint.sh
 
 RUN ["./entrypoint.sh"]
+# Instalar dependencias
+RUN npm install && npm rebuild better-sqlite3
 
-#CMD ["sh"]
-CMD ["npm", "start"]
+# Exponer el puerto
+EXPOSE 3000
+
+# Arrancar el servidor
+CMD ["node", "server.js"]
