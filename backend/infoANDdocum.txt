@@ -31,6 +31,11 @@ https://developer.hashicorp.com/vault/docs/auth/jwt?
 https://support.hashicorp.com/hc/en-us/articles/12406076771347-Vault-JWT-auth-with-static-keys?
 https://developer.hashicorp.com/vault/tutorials/auth-methods/multi-factor-authentication?
 
+youtube links per cyber 
+nginx waf: https://www.youtube.com/watch?v=5eRxOYbaIEI&t=1321s
+apache waf: https://www.youtube.com/watch?v=MB7nQrlP5Yc
+hashicorp vault: https://www.youtube.com/watch?v=-sU0O82fdZs&list=PL7iMyoQPMtAP7XeXabzWnNKGkCex1C_3C
+
 Autenticació amb JWT + 2FA
 import jwt from '@fastify/jwt';
 https://developer.hashicorp.com/vault/tutorials/auth-methods/multi-factor-authentication?
