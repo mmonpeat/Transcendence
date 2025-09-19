@@ -6,11 +6,12 @@ import { fileURLToPath } from 'url';
 import Database from 'better-sqlite3';
 import { attachPong } from './pong_server.js';
 import websocket from '@fastify/websocket'; // Asegúrate de importar el plugin de websocket
+import FastifyHttpsAlwaysPlugin, { HttpsAlwaysOptions } from "fastify-https-always";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); // Corregido: se usa path.dirname
 
-const fastify = Fastify({ logger: true });
+const fastify = Fastify({ logger: true, trustProxy: true});
 
 // ----------------------
 // CORS
