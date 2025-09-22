@@ -4,5 +4,6 @@
     "better-sqlite3": "^12.2.0",
     "fastify": "^5.6.0",
     "fastify-https-always": "^2.0.0"
-  }
+  },
+  "type": "module"
 }

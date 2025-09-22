@@ -6,12 +6,20 @@ import { fileURLToPath } from 'url';
 import Database from 'better-sqlite3';
 import { attachPong } from './pong_server.js';
 import websocket from '@fastify/websocket'; // Asegúrate de importar el plugin de websocket
-import FastifyHttpsAlwaysPlugin, { HttpsAlwaysOptions } from "fastify-https-always";
+import FastifyHttpsAlways from "fastify-https-always";
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); // Corregido: se usa path.dirname
 
-const fastify = Fastify({ logger: true, trustProxy: true});
+const fastify = Fastify({ 
+  logger: true, 
+  trustProxy: true,
+  https: {
+    key: fs.readFileSync(path.join(__dirname, 'certs/fd_trascendence.key')),
+    cert: fs.readFileSync(path.join(__dirname, 'certs/fd_trascendence.crt'))
+  }
+});
 
 // ----------------------
 // CORS
@@ -30,11 +38,18 @@ fastify.addHook('onRequest', (request, reply, done) => {
 // ----------------------
 // Servir archivos estáticos
 // ----------------------
+
 fastify.register(fastifyStatic, {
   root: path.join(__dirname, 'public'),
   prefix: '/',
   decorateReply: false,
 });
+
+fastify.register(FastifyHttpsAlways, {
+  productionOnly: false, 
+  redirect: true
+});
+
 /*
 fastify.register(fastifyStatic, {
   root: path.join(__dirname, '..', 'frontend'),

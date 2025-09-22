@@ -8,6 +8,7 @@ services:
     container_name: transcendence_db_server
     volumes:
       - ./data:/usr/src/app/data   # solo montamos la DB
+      - ./backend/certs:/usr/src/app/certs
     ports:
       - "3000:3000"
 

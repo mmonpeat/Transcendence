@@ -8,7 +8,15 @@ import fs from "fs/promises";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const fastify = Fastify({ logger: true, trustProxy: true });
+const fastify = Fastify({ 
+  logger: true, 
+  trustProxy: true,
+  https: {
+    key: fs.readFileSync(path.join(__dirname, 'certs/fd_trascendence.key')),
+    cert: fs.readFileSync(path.join(__dirname, 'certs/fd_trascendence.crt'))
+  }
+});
+
 await fastify.register(websocketPlugin);
 
 let clients = [];

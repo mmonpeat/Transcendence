@@ -23,3 +23,4 @@ docker rm $(docker ps -a -q)
 docker image prune -a
 nos preguntara si o si le decimos si
 
+docker rm -f $(docker ps -aq) && docker rmi -f $(docker images -q)
