@@ -1,12 +1,13 @@
 // websocket_server.js
-const WebSocket = require('ws');
+const WebSocket = require('wss');
 
 const PORT = 8080;
 
 // Crear servidor WebSocket escuchando en todas las interfaces
-const wss = new WebSocket.Server({ port: PORT, host: '0.0.0.0' });
+//const wss = new WebSocket.Server({ port: PORT, host: '0.0.0.0' });
+const ws = new WebSocket("wss://localhost:8080/ws");
 
-console.log(`Servidor WebSocket funcionando en ws://localhost:${PORT}`);
+console.log(`Servidor WebSocket funcionando en wss://localhost:${PORT}`);
 
 // Función de keepalive para evitar desconexiones por timeout
 function heartbeat() {

@@ -11,13 +11,28 @@ import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); // Corregido: se usa path.dirname
-
+/*
 const fastify = Fastify({ 
   logger: true, 
   trustProxy: true,
   https: {
     key: fs.readFileSync(path.join(__dirname, 'certs/fd_trascendence.key')),
     cert: fs.readFileSync(path.join(__dirname, 'certs/fd_trascendence.crt'))
+  }
+});
+*/
+const key = fs.readFileSync(path.join(__dirname, "/usr/src/app/certs/fd_trascendence.key"));
+const cert = fs.readFileSync(path.join(__dirname, "/usr/src/app/certs/fd_trascendence.crt"));
+
+console.log({ key, cert });
+
+// Inicialitzem Fastify amb HTTPS
+const fastify = Fastify({ 
+  logger: true, 
+  trustProxy: true,
+  https: {
+    key,
+    cert
   }
 });
 
@@ -43,6 +58,10 @@ fastify.register(fastifyStatic, {
   root: path.join(__dirname, 'public'),
   prefix: '/',
   decorateReply: false,
+});
+
+fastify.get('/', function (request, reply) {
+  reply.send({ hello: "world api_server" });
 });
 
 fastify.register(FastifyHttpsAlways, {
@@ -208,7 +227,14 @@ try {
   // ----------------------
   const start = async () => {
     try {
-      await fastify.listen({ port: 3000, host: '0.0.0.0' });
+      await fastify.listen({ port: 4443, host: '0.0.0.0' }, function(err, address) {
+        if (err) {
+          fastify.log.error(err);
+          process.exit(1);
+        }
+        fastify.log.info(`server listening on ${address}`);
+      });
+
     } catch (err) {
       fastify.log.error(err);
       process.exit(1);

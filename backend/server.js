@@ -1,13 +1,14 @@
 // backend/server.js
 import Fastify from "fastify";
 import websocketPlugin from "@fastify/websocket";
+import FastifyHttpsAlways from "fastify-https-always";
 import path from "path";
 import { fileURLToPath } from "url";
-import fs from "fs/promises";
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+/*
 const fastify = Fastify({ 
   logger: true, 
   trustProxy: true,
@@ -15,6 +16,29 @@ const fastify = Fastify({
     key: fs.readFileSync(path.join(__dirname, 'certs/fd_trascendence.key')),
     cert: fs.readFileSync(path.join(__dirname, 'certs/fd_trascendence.crt'))
   }
+});
+*/
+const key = fs.readFileSync(path.join(__dirname, "/usr/src/app/certs/fd_trascendence.key"));
+const cert = fs.readFileSync(path.join(__dirname, "/usr/src/app/certs/fd_trascendence.crt"));
+
+console.log({ key, cert });
+
+// Inicialitzem Fastify amb HTTPS
+const fastify = Fastify({ 
+  logger: true, 
+  trustProxy: true,
+  https: {
+    key,
+    cert
+  }
+});
+fastify.get('/', function (request, reply) {
+  reply.send({ hello: "world server, websocket" });
+});
+
+fastify.register(FastifyHttpsAlways, {
+  productionOnly: false, 
+  redirect: true
 });
 
 await fastify.register(websocketPlugin);
