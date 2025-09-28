@@ -1,5 +1,4 @@
 // backend/db_server.js
-//node_modules dins del contenidor db_server, app/backend/node_modules
 import Fastify from 'fastify';
 import Database from 'better-sqlite3';
 import path from 'path';

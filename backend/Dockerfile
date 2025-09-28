@@ -2,6 +2,7 @@
 # Imagen base oficial de Node.js
 FROM node:20-slim
 
+
 # Instalar dependencias necesarias para better-sqlite3
 RUN apt-get update && apt-get install -y \
     sqlite3 \
@@ -13,16 +14,29 @@ RUN apt-get update && apt-get install -y \
 # Crear directorio de trabajo
 WORKDIR /usr/src/app
 
+# PRIMERO copiar package.json para cache de dependencias
+COPY package*.json ./
+
+# Instalar dependencias
+RUN npm install
+
 # Copiar backend
 COPY . .
-COPY --chmod=744 ./generate-certificate.sh ./entrypoint.sh
 
-RUN ["./entrypoint.sh"]
-# Instalar dependencias
-RUN npm install && npm rebuild better-sqlite3
+RUN mkdir -p /certs
 
-# Exponer el puerto
-EXPOSE 3000
+COPY certs/fd_transcendence.key /usr/src/app/certs/fd_transcendence.key
+COPY certs/fd_transcendence.crt /usr/src/app/certs/fd_transcendence.crt
+
+# Rebuild better-sqlite3 si es necesario
+RUN npm rebuild better-sqlite3
+
+# Exponer el puerto del servidor que vols que corri
+# EXPOSE 3000
+# HTTPS API
+EXPOSE 4443
+ # HTTP (opcional)
+# EXPOSE 8080
 
 # Arrancar el servidor
 CMD ["node", "server.js"]

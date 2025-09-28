@@ -9,24 +9,21 @@ services:
     ports:
       - "3000:3000"
 
-  websocket_server:
-    build: ./backend
-    container_name: transcendence_websocket_server
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: transcendence_backend
     working_dir: /usr/src/app
-    command: node backend/server.js
     ports:
-      - "8080:8080"
-    volumes:
-      - ./backend:/usr/src/app/backend  # solo el código fuente
-      - ./certs:/usr/src/app/certs
+      # - "8080:8080"   # HTTP (per redirecció o testing)
+      - "8443:8443"   # HTTPS (el port que usa api_server.js)
 
-  web_server:
-    build: ./frontend
-    container_name: transcendence_web_server
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: transcendence_frontend
     working_dir: /usr/src/app
-    command: npx http-server . -p 8081
     ports:
       - "8081:8081"
-    volumes:
-      - ./frontend:/usr/src/app   # solo frontend
-      - ./certs:/usr/src/app/certs

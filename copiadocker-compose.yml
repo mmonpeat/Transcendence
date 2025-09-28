@@ -1,22 +1,19 @@
-version: '3.8'
-
 services:
-  web-server:
-    image: node:20-slim
-    container_name: web-server
-    working_dir: /usr/src/app
+  db_server:
+    build:
+      context: .
+      dockerfile: ./db_service/Dockerfile
+    container_name: transcendence_db_server
     volumes:
-      - .:/usr/src/app
+      - ./data:/usr/src/app/data   # solo montamos la DB
     ports:
-      - "8081:8081"
-    command: npx http-server backend/public -p 8081
+      - "3000:3000"
 
-  websocket-server:
-    image: node:20-slim
-    container_name: websocket-server
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: transcendence_backend
     working_dir: /usr/src/app
-    volumes:
-      - .:/usr/src/app
     ports:
       - "8080:8080"
-    command: node backend/websocket_server.js

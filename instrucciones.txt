@@ -24,3 +24,14 @@ docker image prune -a
 nos preguntara si o si le decimos si
 
 docker rm -f $(docker ps -aq) && docker rmi -f $(docker images -q)
+
+docker exec –it name_continer bash
+
+docker run -it --rm --entrypoint bash mytra-api
+
+make up
+
+make logs
+
+# Acceder a un contenedor
+make shell-<continername>

@@ -149,8 +149,8 @@
             const messageBox = document.getElementById('message-box');
             const themeToggleBtn = document.getElementById('theme-toggle');
             
-            const apiUrl = 'https://localhost:3000/api';
-
+            // const apiUrl = 'http://localhost:3000/api';
+            const apiUrl = 'https://localhost:8443/api'; 
 
             // Función para cambiar el tema
             themeToggleBtn.addEventListener('click', () => {
@@ -171,7 +171,7 @@
             }
 
             // AHORA LA LLAMADA DE FETCH USA LA RUTA EXPLÍCITA
-            function fetchPlayers() {
+            /*function fetchPlayers() {
                 fetch(`${apiUrl}?route=players`)
                     .then(response => {
                         if (!response.ok) {
@@ -205,8 +205,28 @@
                         playersList.innerHTML = `<p class="text-red-500">Error: ${error.message}</p>`;
                         console.error('Error:', error);
                     });
-            }
+            }*/
             
+            function fetchPlayers() {
+                fetch(`${apiUrl}/test`, {
+                    mode: 'cors',
+                    credentials: 'omit'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al cargar la API HTTPS');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("✅ Connexió HTTPS exitosa:", data);
+                    // Continuar amb la lògica normal...
+                })
+                .catch(error => {
+                    console.error('❌ Error HTTPS:', error);
+                    // Fallback a HTTP si cal
+                });
+            }
             addForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const formData = new FormData(addForm);

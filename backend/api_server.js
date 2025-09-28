@@ -11,29 +11,37 @@ import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); // Corregido: se usa path.dirname
-/*
+
 const fastify = Fastify({ 
   logger: true, 
   trustProxy: true,
   https: {
-    key: fs.readFileSync(path.join(__dirname, 'certs/fd_trascendence.key')),
-    cert: fs.readFileSync(path.join(__dirname, 'certs/fd_trascendence.crt'))
+    key: fs.readFileSync(path.join(__dirname, 'certs/fd_transcendence.key')),
+    cert: fs.readFileSync(path.join(__dirname, 'certs/fd_transcendence.crt'))
   }
 });
-*/
-const key = fs.readFileSync(path.join(__dirname, "/usr/src/app/certs/fd_trascendence.key"));
-const cert = fs.readFileSync(path.join(__dirname, "/usr/src/app/certs/fd_trascendence.crt"));
 
-console.log({ key, cert });
+// Ruta de prova HTTPS
+fastify.get('/', async (request, reply) => {
+  return { 
+    message: "✅ HTTPS funcionant correctament!",
+    protocol: request.protocol,
+    https: request.secure
+  };
+});
 
-// Inicialitzem Fastify amb HTTPS
-const fastify = Fastify({ 
-  logger: true, 
-  trustProxy: true,
-  https: {
-    key,
-    cert
-  }
+// Ruta de prova API
+fastify.get('/api/test', async (request, reply) => {
+  return { 
+    status: "success",
+    message: "API HTTPS funcionant",
+    timestamp: new Date().toISOString()
+  };
+});
+
+// Health check
+fastify.get('/health', async (request, reply) => {
+  return { status: 'ok', service: 'api-server' };
 });
 
 // ----------------------
@@ -60,14 +68,7 @@ fastify.register(fastifyStatic, {
   decorateReply: false,
 });
 
-fastify.get('/', function (request, reply) {
-  reply.send({ hello: "world api_server" });
-});
 
-fastify.register(FastifyHttpsAlways, {
-  productionOnly: false, 
-  redirect: true
-});
 
 /*
 fastify.register(fastifyStatic, {
@@ -209,6 +210,7 @@ try {
   // ----------------------
   // Router principal de la API
   // ----------------------
+
   fastify.all('/api', async (request, reply) => {
     const route = request.query.route ?? 'players';
 
@@ -227,7 +229,7 @@ try {
   // ----------------------
   const start = async () => {
     try {
-      await fastify.listen({ port: 4443, host: '0.0.0.0' }, function(err, address) {
+      await fastify.listen({ port: 8443, host: '0.0.0.0' }, function(err, address) {
         if (err) {
           fastify.log.error(err);
           process.exit(1);
