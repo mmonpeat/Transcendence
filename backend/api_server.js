@@ -4,7 +4,7 @@ import fastifyStatic from '@fastify/static';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Database from 'better-sqlite3';
-import { attachPong } from './pong_server.js';
+// import { attachPong } from './pong_server.js';
 import websocket from '@fastify/websocket'; // Asegúrate de importar el plugin de websocket
 import FastifyHttpsAlways from "fastify-https-always";
 import fs from 'fs';
@@ -12,12 +12,38 @@ import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); // Corregido: se usa path.dirname
 
+const keyPath = path.join(__dirname, 'certs/fd_transcendence.key');
+const certPath = path.join(__dirname, 'certs/fd_transcendence.crt');
+
+// console.log('🔍 Verificando certificados...');
+// console.log('Key path:', keyPath);
+// console.log('Cert path:', certPath);
+
+// Verificar que los archivos existen
+try {
+  if (!fs.existsSync(keyPath)) {
+    throw new Error(`No se encuentra el archivo key: ${keyPath}`);
+  }
+  if (!fs.existsSync(certPath)) {
+    throw new Error(`No se encuentra el archivo cert: ${certPath}`);
+  }
+  
+  // Leer los certificados SIN encoding para archivos binarios
+  const key = fs.readFileSync(keyPath);
+  const cert = fs.readFileSync(certPath);
+  
+} catch (error) {
+  console.error('Error amb els certificats:', error.message);
+  process.exit(1);
+}
+
+
 const fastify = Fastify({ 
   logger: true, 
   trustProxy: true,
   https: {
-    key: fs.readFileSync(path.join(__dirname, 'certs/fd_transcendence.key')),
-    cert: fs.readFileSync(path.join(__dirname, 'certs/fd_transcendence.crt'))
+    key: fs.readFileSync(keyPath),  // SIN encoding para archivos binarios
+    cert: fs.readFileSync(certPath) // SIN encoding para archivos binarios
   }
 });
 
@@ -29,7 +55,7 @@ fastify.get('/', async (request, reply) => {
     https: request.secure
   };
 });
-
+/*
 // Ruta de prova API
 fastify.get('/api/test', async (request, reply) => {
   return { 
@@ -37,7 +63,7 @@ fastify.get('/api/test', async (request, reply) => {
     message: "API HTTPS funcionant",
     timestamp: new Date().toISOString()
   };
-});
+});*/
 
 // Health check
 fastify.get('/health', async (request, reply) => {
@@ -88,8 +114,8 @@ try {
   // ----------------------
   // Integrar Pong (WebSocket en /pong)
   // ----------------------
-  fastify.register(websocket);
-  await attachPong(fastify);
+  // fastify.register(websocket);
+  // await attachPong(fastify);
 
   // ----------------------
   // Funciones de API
@@ -229,7 +255,7 @@ try {
   // ----------------------
   const start = async () => {
     try {
-      await fastify.listen({ port: 8443, host: '0.0.0.0' }, function(err, address) {
+      await fastify.listen({ port: 3000, host: '0.0.0.0' }, function(err, address) {
         if (err) {
           fastify.log.error(err);
           process.exit(1);

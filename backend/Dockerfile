@@ -32,11 +32,9 @@ COPY certs/fd_transcendence.crt /usr/src/app/certs/fd_transcendence.crt
 RUN npm rebuild better-sqlite3
 
 # Exponer el puerto del servidor que vols que corri
-# EXPOSE 3000
-# HTTPS API
-EXPOSE 4443
- # HTTP (opcional)
-# EXPOSE 8080
+EXPOSE 3000
+# HTTP (opcional)
+EXPOSE 8080
 
 # Arrancar el servidor
 CMD ["node", "server.js"]

@@ -10,24 +10,19 @@ import FastifyHttpsAlways from "fastify-https-always";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const keyPath = path.join(__dirname, 'certs/fd_transcendence.key');
+const certPath = path.join(__dirname, 'certs/fd_transcendence.crt');
 
 const fastify = Fastify({ 
   logger: true, 
   trustProxy: true,
   https: {
-    key: fs.readFileSync(path.join(__dirname, 'certs/fd_transcendence.key')),
-    cert: fs.readFileSync(path.join(__dirname, 'certs/fd_transcendence.crt'))
+    key: fs.readFileSync(keyPath),  // SIN encoding para archivos binarios
+    cert: fs.readFileSync(certPath) // SIN encoding para archivos binarios
   }
 });
 
-/*
-fastify.register(FastifyHttpsAlways, {
-  productionOnly: false, 
-  redirect: true
-});
-*/
-
-/*const fastify = Fastify({ logger: true });*/
+// const fastify = Fastify({ logger: true });
 await fastify.register(websocketPlugin);
 
 let clients = [];
@@ -182,7 +177,7 @@ setInterval(() => {
 const start = async () => {
   try {
     await fastify.listen({ port: 8080, host: "0.0.0.0" });
-    fastify.log.info("🚀 Pong server corriendo en http://localhost:8080");
+    fastify.log.info("🚀 Pong server corriendo en https://localhost:8080");
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);

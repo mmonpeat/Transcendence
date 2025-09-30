@@ -37,13 +37,3 @@
 #
 ## arrenca el servidor node
 #exec npm start
-
-
-# echo "Generating SSL certification"
-# openssl req -x509 -nodes -days 365 \
-# 		-newkey rsa:2048 \
-# 		-keyout certs/key.txt \
-# 		-out	certs/cert.txt \
-# 		-subj "/C=ES/ST=Catalonia/L=Barcelona/O=42Barcelona/OU=42 School/CN=fd_trascendence" \
-# 		> /dev/null 2>&1
-# echo "SSL Certification Generated!"

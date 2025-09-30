@@ -15,9 +15,10 @@ services:
       dockerfile: Dockerfile
     container_name: transcendence_backend
     working_dir: /usr/src/app
+    volumes:
+      - ./data:/usr/src/app/data
     ports:
-      # - "8080:8080"   # HTTP (per redirecció o testing)
-      - "8443:8443"   # HTTPS (el port que usa api_server.js)
+      - "8080:8080"
 
   frontend:
     build:

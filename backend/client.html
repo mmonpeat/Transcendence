@@ -22,7 +22,7 @@
     let playerId = null;
     let gameState = null;
 
-    const ws = new WebSocket("ws://localhost:8080/ws");
+    const ws = new WebSocket("wss://localhost:8080/ws");
 
     ws.onopen = () => {
       info.textContent = "✅ Conectado al servidor";
