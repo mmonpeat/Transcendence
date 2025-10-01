@@ -4,7 +4,6 @@ import websocketPlugin from "@fastify/websocket";
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import FastifyHttpsAlways from "fastify-https-always";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,13 +12,28 @@ const __dirname = path.dirname(__filename);
 const keyPath = path.join(__dirname, 'certs/fd_transcendence.key');
 const certPath = path.join(__dirname, 'certs/fd_transcendence.crt');
 
+try {
+  if (!fs.existsSync(keyPath)) {
+    throw new Error(`No se encuentra el archivo key: ${keyPath}`);
+  }
+  if (!fs.existsSync(certPath)) {
+    throw new Error(`No se encuentra el archivo cert: ${certPath}`);
+  }
+  console.log("certificats trobats");
+  
+} catch (error) {
+  console.error('Error amb els certificats:', error.message);
+  process.exit(1);
+}
+
+const httpsOptions = {
+  key: fs.readFileSync(keyPath),
+  cert: fs.readFileSync(certPath)
+};
 const fastify = Fastify({ 
   logger: true, 
   trustProxy: true,
-  https: {
-    key: fs.readFileSync(keyPath),  // SIN encoding para archivos binarios
-    cert: fs.readFileSync(certPath) // SIN encoding para archivos binarios
-  }
+  https: httpsOptions
 });
 
 // const fastify = Fastify({ logger: true });
@@ -43,15 +57,25 @@ let gameState = {
 // Sirve el cliente HTML
 // ----------------------
 fastify.get("/", async (req, reply) => {
-  const htmlPath = path.join(__dirname, "client.html");
-  const htmlContent = await fs.readFile(htmlPath, "utf8");
-  reply.type("text/html").send(htmlContent);
+  try {
+    const htmlPath = path.join(__dirname, "client.html");
+    if (!fs.existsSync(htmlPath))
+    {
+      console.log(`NO troba el arxiu client.html en el ${htmlPath}`);
+      return reply.code(404).send("arxiu del joc no trobat");
+    }
+    const htmlContent = fs.readFileSync(htmlPath, "utf8");
+    reply.type("text/html").send(htmlContent);
+  } catch {
+    console.error("error carregant client.html");
+    reply.code(500).send("error descarregant game");
+  }
 });
 
 // ----------------------
-// WebSocket en /ws
+// WebSocket en /wss
 // ----------------------
-fastify.get("/ws", { websocket: true }, (socket, req) => {
+fastify.get("/wss", { websocket: true }, (socket, req) => {
   const playerId = nextPlayer <= 2 ? nextPlayer++ : null;
   fastify.log.info(`🎮 Nuevo cliente conectado como jugador ${playerId ?? "espectador"}`);
 

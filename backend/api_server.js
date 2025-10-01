@@ -6,7 +6,6 @@ import { fileURLToPath } from 'url';
 import Database from 'better-sqlite3';
 // import { attachPong } from './pong_server.js';
 import websocket from '@fastify/websocket'; // Asegúrate de importar el plugin de websocket
-import FastifyHttpsAlways from "fastify-https-always";
 import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
